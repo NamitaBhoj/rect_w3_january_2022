@@ -1,0 +1,21 @@
+{
+    "extends": "standard",
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ]
+    },
+    "overrides": [
+        {
+            "files": [
+                "**/hello.js"
+            ]
+        }
+    ],
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true
+    }
+}
