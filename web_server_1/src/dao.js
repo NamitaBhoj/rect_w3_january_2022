@@ -7,7 +7,7 @@ function connect () {
     DB = new Client({
         host: 'localhost',
         port: 5432,
-        database: 'classicmodels',
+        database: 'classicModel',
         user: 'postgres',
         password: 'postgres'
     })

@@ -10,8 +10,6 @@ const path = require('path')
 //     res.end()
 // }).listen(8000)
 
-
-
 console.log('server start')
 
 var express=require('express')
@@ -75,8 +73,6 @@ app.get('/test-param/:a/:b', function (request, response) {
         response.end('<h1>a=' + request.params.a + ' b='+ request.params.b +'</h1>')
     });
 
-
-
 // app.get('/products',function(req,res){
 // let pageData={}; // initialize empty object
 //  pageData.title='Product Catalog-blabla.com';
@@ -98,41 +94,24 @@ app.get('/test-param/:a/:b', function (request, response) {
 //     res.render('master_template',pageData)
 // });
 
-app.get('/seasons',function(req,res){
-    let pageData={}; // initialize empty object
-    pageData.title='Home';
-    pageData.description='all seasons';
-    pageData.author='The blabla.com team'
-
-
-    // let nav = [
-    //     {name:'home'},
-    //     {name:'summer'},
-    //     {name:'fall'}
-    //     ];
-
-    //  pageData.content ='<ul>';
-    //     for(let i=0;i<nav.length;i++){
-    //     pageData.content+='<li><a href = "#home">'+nav[i].name+'</a></li>'
-    //     }
-    // pageData.content ='</ul>';
-
-    let seasons = [
-    {id:1,name:'winter'},
-    {id:2,name:'summer'},
-    {id:3,name:'fall'}
-    ]; //typically would come from a database query
-
-    pageData.content='<table>';
-    for(let i=0;i<seasons.length;i++){
-    pageData.content+='<tr><td>'+seasons[i].id+'</td>'
-    pageData.content+='<td>'+seasons[i].name+'</td>'
-    pageData.content+='</tr>'
-    }
-    pageData.content+='</table>';
-
-    res.render('master_template',pageData)
-    });
+// app.get('/seasons',function(req,res){
+//     const pageData={}; // initialize empty object
+//     pageData.title='Home';
+//     pageData.description='all seasons';
+//     pageData.author='The blabla.com team'
+//     const seasons = [
+//         { id: 1, name: 'Winter' },
+//         { id: 2, name: 'Spring' },
+//         { id: 3, name: 'Summer' },
+//         { id: 4, name: 'Fall' }
+//     ]
+//     pageData.content = '<table>'
+//     for (let i = 0; i < seasons.length; i++) {
+//         pageData.content += '<tr><td>' + seasons[i].name + '</tr></td>'
+//     }
+//     pageData.content += '</table>'
+//     res.render('master_template', pageData)
+// })
 
     const { Client } = require('pg')
 
@@ -153,16 +132,87 @@ app.get('/seasons',function(req,res){
         }
     })
 
-    DB.query('SELECT * FROM customers', (error, result) => {
+    // DB.query('SELECT * FROM customers', (error, result) => {
 
-        if (error) {
-            //display error
-            console.log("ERROR in database query: "+error.stack)
-        }else{
-            console.log(result) // the whole thing: all records + all info
-            console.log("Number of records returned:"+result.rowCount)
-            console.log(result.rows) // only the actual records returned, all records
-            console.log(result.rows[0]) // first record only
-            console.log(result.fields) // the table column metadatas
+    //     if (error) {
+    //         //display error
+    //         console.log("ERROR in database query: "+error.stack)
+    //     }else{
+    //         console.log(result) // the whole thing: all records + all info
+    //         console.log("Number of records returned:"+result.rowCount)
+    //         console.log(result.rows) // only the actual records returned, all records
+    //         console.log(result.rows[0]) // first record only
+    //         console.log(result.fields) // the table column metadatas
+    //     }
+    // })
+
+    // List all customers
+app.get('/customers_list', function (request, response) {
+    const DB = require('./src/dao')
+    DB.connect()
+    DB.query('SELECT * from customers', function (customers) {
+        let html = ''
+        html += 'Number of customers: ' + customers.rowCount + '<br>'
+        html += '<table>'
+        for (let i = 0; i < customers.rowCount; i++) {
+            html += '<tr><td>' + customers.rows[i].customernumber + '</td><td>' + customers.rows[i].customername + '</td></tr>'
         }
+        html += '</table>'
+
+        // use the page template of course to display the list
+        const pageData = {} // initialize empty object
+        pageData.title = 'Customers List-blabla.com'
+        pageData.description = 'Customers Number and Name'
+        pageData.author = 'The blabla.com team'
+        // send out the html table
+        pageData.content = html
+        response.render('master_template', pageData)
+        DB.disconnect()
     })
+})
+
+/* POST form processing **********************************************************/
+// Parse URL-encoded bodies (as sent by HTML forms)
+app.use(express.urlencoded())
+
+// Parse JSON bodies (as sent by API clients)
+app.use(express.json())
+
+// see /public_html/form_post.html
+// display form with http://localhost:8000/form_post.html
+app.post('/customer_search_form',
+    function (request, response) {
+        // get the form inputs from the body of the HTTP request
+        console.log(request.body)
+        const userNumber = request.body.number
+        console.log('username=' + userNumber)
+
+        const DB = require('./src/dao')
+
+        DB.connect()
+
+        DB.query('SELECT * from customers where customernumber = ' + userNumber, function (customers) {
+        let html = ''
+        html += 'Number of customers: ' + customers.rowCount + '<br>'
+        if ( customers.rowCount == 0) {
+            response.writeHead(400, { 'Content-Type': 'text/html' })
+            response.end('can not find user')
+        }else{
+        html += '<table>'
+        for (let i = 0; i < customers.rowCount; i++) {
+            html += '<tr><td>' + customers.rows[i].customernumber + '</td><td>' + customers.rows[i].customername + '</td></tr>'
+        }
+        html += '</table>'}
+
+        // use the page template of course to display the list
+        const pageData = {} // initialize empty object
+        pageData.title = 'Customers List-blabla.com'
+        pageData.description = 'Customers Number and Name'
+        pageData.author = 'The blabla.com team'
+        // send out the html table
+        pageData.content = html
+        response.render('master_template', pageData)
+        DB.disconnect()
+    })
+    }
+)
