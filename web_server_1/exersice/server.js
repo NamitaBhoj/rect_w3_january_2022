@@ -14,12 +14,6 @@ console.log('server start')
 
 var express=require('express')
 var app=express()
-
-//use cors to allow request from other websites
-
-const cors= require('cors')
-app.use(cors())
-
 app.set('view engine', 'ejs')
 app.use(express.static('public_html'))
 
