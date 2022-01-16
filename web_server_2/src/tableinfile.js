@@ -1,4 +1,5 @@
 const fs = require('fs')
+
 function getTable (fileName) {
     const fileContentString = fs.readFileSync(fileName, 'utf8')
     const fileContentJSON = JSON.parse(fileContentString)
@@ -8,6 +9,7 @@ function saveTable (filename, table) {
     const fileContentString = JSON.stringify(table)
     fs.writeFileSync(filename, fileContentString)
 }
+
 function getRec (filename, id) {
     const table = getTable(filename)
     for (let i = 0; i < table.length; i++) {
@@ -15,16 +17,18 @@ function getRec (filename, id) {
             return table[i]
         }
     }
+    return {}
 }
 function addRec (filename, rec) {
     const table = getTable(filename)
     for (let i = 0; i < table.length; i++) {
         if (table[i].id === rec.id) {
-            throw 'id already exist!'
+            return false
         }
     }
     table.push(rec)
     saveTable(filename, table)
+    return true
 }
 function updateRec (filename, rec) {
     const table = getTable(filename)
@@ -32,11 +36,14 @@ function updateRec (filename, rec) {
         if (table[i].id === rec.id) {
             table.put(rec)
         } else {
-            throw 'id not found.'
+            throw new Error ('id not found.')
         }
     }
 }
 module.exports = {
     getTable: getTable,
-    saveTable: saveTable
+    saveTable: saveTable,
+    getRec: getRec,
+    addRec: addRec,
+    updateRec: updateRec
 }

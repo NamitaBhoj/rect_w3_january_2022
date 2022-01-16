@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hi</title>
+</head>
+
+<body>
+    <h1>test</h1>
+    <div id="demo"></div>
+    <script>
+        const USER_ARRAY = [
+            { id: 1, name: 'Martin', age: 45 },
+            { id: 2, name: 'Pierre', age: 15 },
+            { id: 3, name: 'Josee', age: 14 },
+            { id: 4, name: 'Melanie', age: 32 },
+            { id: 5, name: 'Sonia', age: 24 }
+        ]
+
+        // //Exercise 1
+        // USER_ARRAY.forEach(object => {
+        //     delete object['age'];
+        // });
+
+        // console.log(USER_ARRAY);
+
+        //Exercise 2
+
+        function checkAdult(age) {
+            return age >= 15; //returns true or false
+        }
+
+        let result = USER_ARRAY.filter(checkAdult);
+        console.log(result)
+
+        //Exercise 3
+
+        let getAverage = arr => {
+            let reducer = (total, currentValue) => total + currentValue;
+            let sum = arr.reduce(reducer)
+            return sum / arr.length;
+        }
+
+        let ages = USER_ARRAY.map(person => person.age);
+
+        console.log(getAverage(ages));
+
+        //Exercise 4
+        let userToTr = (oneUser) => {
+
+            return '<tr><td>' + oneUser.id + '</td><td>' + oneUser.name + '</td><td>' + oneUser.age + '</td></tr>'
+
+        }
+
+        let userTr = USER_ARRAY.map(userToTr)
+
+        console.log(userTr)
+
+
+
+        let arrayToString = (string, oneString) => {
+
+            return string + oneString
+
+        }
+
+        result = userTr.reduce(arrayToString, '')
+
+        result = '<table>' + result + '</table>'
+
+
+
+        document.getElementById("demo").innerHTML = result
+    </script>
+</body>
+
+</html>
