@@ -1,0 +1,12 @@
+GET http://localhost:3000/users HTTP/1.1
+
+###
+
+GET http://localhost:3000/users/1 HTTP/1.1
+
+###
+POST http://localhost:3000/users HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+officecode=8&city=montreal&phone=7990440332&addressline1=xyz&addressline2=abc&state=quebec&country=canada&postalcode=h3w1p1&territory=kkk
+
