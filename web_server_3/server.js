@@ -3,7 +3,10 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const tableInFile = require('./src/tableinfile')
-const port = 3000
+const port = 8000
+const cors = require('cors')
+
+app.use(cors())
 
 app.use(bodyParser.json())
 app.use(
