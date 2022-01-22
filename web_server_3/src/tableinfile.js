@@ -6,12 +6,24 @@ const pool = new Pool({
     user: 'postgres',
     password: 'postgres'
 })
+
 const getUsers = (request, response) => {
     pool.query('SELECT * FROM offices ORDER BY officecode ASC', (error, results) => {
         if (error) {
             throw error
         }
-        response.status(200).json(results.rows)
+        // response.status(200).json(results.rows)
+        const officesJSON = { offices: results.rows }
+
+        const officesJSONString = JSON.stringify(officesJSON, null, 4)
+
+        // set content type
+
+        response.writeHead(200, { 'Content-Type': 'application/json' })
+
+        // send out a string
+
+        response.end(officesJSONString)
     })
 }
 
