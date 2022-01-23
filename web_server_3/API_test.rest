@@ -1,15 +1,20 @@
-GET http://localhost:8000/users HTTP/1.1
+GET http://localhost:8000/offices HTTP/1.1
 
 ###
+GET http://localhost:8000/offices/6 HTTP/1.1
 
-GET http://localhost:8000/users/1 HTTP/1.1
 
 ###
-POST http://localhost:8000/users HTTP/1.1
+POST http://localhost:8000/offices HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
 
-officecode=8&city=montreal&phone=7990440332&addressline1=xyz&addressline2=abc&state=quebec&country=canada&postalcode=h3w1p1&territory=kkk
+officecode=8&city=Laval&phone=450-781-1234&addressline1=89 rue Principale&addressline2=&state=QC&country=Canada&postalcode=H8Y-2L6&territory=Quebec
 
 ###
+PUT http://localhost:8000/offices/8 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
 
-DELETE http://localhost:8000/users/8
+officecode=8&city=Ste-Catherine&phone=450-781-1234&addressline1=89 rue Principale&addressline2=&state=QC&country=Canada&postalcode=H8Y-2L6&territory=Quebec
+
+###
+DELETE http://localhost:8000/offices/8 HTTP/1.1
