@@ -5,12 +5,14 @@ import reportWebVitals from './reportWebVitals'
 
 import Header from './Components/Header'
 import Playlist from './Components/Playlist'
+import Discogs from './Components/Discogs'
 import Footer from './Components/Footer'
 
 ReactDOM.render(
     <React.StrictMode>
         <Header companyName='Music Playlist Manager' />
         <Playlist />
+        <Discogs />
         <Footer authorName='Author - Yagnesh Patel and Namita Bhoj' />
     </React.StrictMode>,
     document.getElementById('root')

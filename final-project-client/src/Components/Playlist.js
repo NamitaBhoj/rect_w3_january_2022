@@ -1,4 +1,5 @@
 import React from 'react'
+import Styles from './Playlist.module.css'
 
 class Playlist extends React.Component {
     constructor (props, context) {
@@ -75,9 +76,12 @@ class Playlist extends React.Component {
             }
         )
     }
+
     trackHTML = track => {
         return (
-            <div>
+            <div id={Styles['mainTable']}>
+                <h1>My playlist</h1>
+
                 <table>
                     <tbody>
                         <tr>
@@ -114,11 +118,21 @@ class Playlist extends React.Component {
                                         </tr>
                                         <tr>
                                             <td>
-                                                {
-                                                    this.state.tracks_data[
-                                                        this.state.tracks_index
-                                                    ].uri
-                                                }
+                                                <a
+                                                    href={
+                                                        this.state.tracks_data[
+                                                            this.state
+                                                                .tracks_index
+                                                        ].uri
+                                                    }
+                                                >
+                                                    {
+                                                        this.state.tracks_data[
+                                                            this.state
+                                                                .tracks_index
+                                                        ].uri
+                                                    }
+                                                </a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -176,43 +190,11 @@ class Playlist extends React.Component {
             if (this.state.tracks_count !== 0) {
                 return (
                     <div>
-                        <b>
-                            List of offices from server localhost:8000/offices
-                        </b>
-                        {/* <Office office={this.state.offices_data[this.state.offices_index]} /> */}
                         {this.trackHTML(
                             this.state.current_tracks
                                 ? this.state.current_tracks
                                 : this.state.new_track
                         )}
-                        {/* <div>
-                            <button
-                                className={
-                                    this.state.offices_index === 0
-                                        ? 'd-none'
-                                        : ''
-                                }
-                                onClick={() => this.changeOfficeIndex('-')}
-                            >
-                                {' '}
-                                &lt; Previous
-                            </button>
-                            <span>
-                                {this.state.offices_index + 1} of{' '}
-                                {this.state.offices_count}
-                            </span>
-                            <button
-                                className={
-                                    this.state.offices_index ===
-                                    this.state.offices_count - 1
-                                        ? 'd-none'
-                                        : ''
-                                }
-                                onClick={() => this.changeOfficeIndex('+')}
-                            >
-                                Next &gt;
-                            </button>
-                        </div> */}
                     </div>
                 )
             } else {
