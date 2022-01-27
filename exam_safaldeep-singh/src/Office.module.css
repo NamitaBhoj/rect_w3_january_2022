@@ -1,0 +1,35 @@
+.officeForm div {
+    margin: 10px 5px;
+}
+
+.officeForm div {
+    margin: 10px 5px;
+}
+
+.officeForm div label {
+    text-align: right;
+    display: inline-block;
+    width: 35%;
+    margin-right: 3%;
+}
+
+.officeForm div input {
+    width: 50%;
+}
+
+.officeForm td {
+    border: 1px solid black;
+}
+
+.offices {
+    width: 400px;
+}
+
+.officesNav {
+    text-align: center;
+}
+
+.officeNav button {
+    margin-left: 5px;
+    margin-right: 5px;
+}

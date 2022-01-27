@@ -1,0 +1,17 @@
+.header {
+    background-color: blue;
+    color: white;
+    text-align: right;
+}
+
+.header h2 {
+    margin-top: 0;
+    display: inline-block;
+}
+
+.changeBtn {
+    background-color: darkgreen;
+    color: white;
+    padding: 15px 5px;
+    font-weight: 900;
+}
