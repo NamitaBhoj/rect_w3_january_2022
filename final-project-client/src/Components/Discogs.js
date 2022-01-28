@@ -41,11 +41,32 @@ class Discogs extends React.Component {
                 response.json().then(json_response => {
                     this.setState({
                         isLoading: false,
-
                         error: json_response
                     })
                 })
             }
+        })
+    }
+    add = item => {
+        console.log(item)
+        console.log(item.genre[0])
+
+        const Data = {
+            playlist: item.genre[0],
+            title: item.title,
+            uri: item.uri,
+            master_id: item.master_id
+        }
+        fetch('http://localhost:8000/tracks/', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(Data)
+        }).then(response => {
+            // eslint-disable-next-line no-restricted-globals
+            location.reload()
         })
     }
     // display the offices table
@@ -79,9 +100,47 @@ class Discogs extends React.Component {
                     {this.state.isLoading && <div> loading</div>}
                     <div>
                         <table>
-                            {this.state.searches_data.map(item => (
-                                <div>{item.title}</div>
-                            ))}
+                            <tr>
+                                {this.state.searches_data.map((item, index) => (
+                                    <div key={`playlist${index}`}>
+                                        <td>
+                                            <div>
+                                                <p>{item.title}</p>
+                                                <img
+                                                    src={item.cover_image}
+                                                    alt='cover'
+                                                />{' '}
+                                                <p>{item.style}</p>
+                                                <p>{item.uri}</p>
+                                                <a
+                                                    href={
+                                                        'https://www.discogs.com' +
+                                                        item.uri
+                                                    }
+                                                >
+                                                    More information
+                                                </a>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <p>{item.master_id}</p>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <button
+                                                    type='button'
+                                                    onClick={() =>
+                                                        this.add(item)
+                                                    }
+                                                >
+                                                    Add{' '}
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </div>
+                                ))}
+                            </tr>
                         </table>
                     </div>
                 </div>

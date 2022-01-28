@@ -9,7 +9,7 @@ class Playlist extends React.Component {
             current_tracks: null,
             new_track: {
                 id: '',
-                playlist_id: '',
+                playlist_title: '',
                 title: '',
                 uri: '',
                 master_id: ''
@@ -77,6 +77,19 @@ class Playlist extends React.Component {
         )
     }
 
+    delete = () => {
+        const id = this.state.tracks_data[this.state.tracks_index].id
+        fetch('http://localhost:8000/tracks/' + id, {
+            method: 'DELETE'
+        })
+            .then(response => response.json())
+            .then(data => {
+                // console.log(data);
+                // eslint-disable-next-line no-restricted-globals
+                location.reload()
+            })
+    }
+
     trackHTML = track => {
         return (
             <div id={Styles['mainTable']}>
@@ -85,93 +98,30 @@ class Playlist extends React.Component {
                 <table>
                     <tbody>
                         <tr>
-                            <td>
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                {
-                                                    this.state.tracks_data[
-                                                        this.state.tracks_index
-                                                    ].title
-                                                }
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                {
-                                                    this.state.tracks_data[
-                                                        this.state.tracks_index
-                                                    ].id
-                                                }
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Play-id</td>
-                                            <td>
-                                                {
-                                                    this.state.tracks_data[
-                                                        this.state.tracks_index
-                                                    ].playlist_id
-                                                }
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a
-                                                    href={
-                                                        this.state.tracks_data[
-                                                            this.state
-                                                                .tracks_index
-                                                        ].uri
-                                                    }
-                                                >
-                                                    {
-                                                        this.state.tracks_data[
-                                                            this.state
-                                                                .tracks_index
-                                                        ].uri
-                                                    }
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>master-id</td>
-                                            <td>
-                                                {
-                                                    this.state.tracks_data[
-                                                        this.state.tracks_index
-                                                    ].master_id
-                                                }
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                            <td>
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <button
-                                                // className={
-                                                //     this.state
-                                                //         .current_office
-                                                //         ? ''
-                                                //         : 'd-none'
-                                                // }
-                                                // type='button'
-                                                // onClick={() =>
-                                                //     this.deleteOffice()
-                                                // }
-                                                >
-                                                    Delete{' '}
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
+                            {this.state.tracks_data.map((item, index) => (
+                                <div key={`playlist${index}`}>
+                                    <td>
+                                        <div>
+                                            <p>{item.title}</p>
+                                            <p>{index + 1}</p>
+                                            <p>{item.playlist_title}</p>
+                                            <a href={item.uri}>{item.uri}</a>
+                                            <p>{item.master_id}</p>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div>
+                                            <button
+                                                type='button'
+                                                onClick={() => this.delete()}
+                                            >
+                                                Delete{' '}
+                                            </button>
+                                        </div>
+                                    </td>
+                                </div>
+                            ))}
                         </tr>
                     </tbody>
                 </table>

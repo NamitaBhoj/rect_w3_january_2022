@@ -19,25 +19,28 @@ app.get('/', function (req, res) {
 app.get('/tracks', (req, res) => {
     const DB = require('./src/dao')
     DB.connect()
-    DB.query('SELECT * from track', function (tracks) {
-        if (tracks.rowCount > 0) {
-            const officesJSON = { msg: 'OK', tracks: tracks.rows }
-            const officesJSONString = JSON.stringify(officesJSON, null, 4)
-            // set content type
-            res.writeHead(200, { 'Content-Type': 'application/json' })
-            // send out a string
-            res.end(officesJSONString)
-        } else {
-            // set content type
-            const officesJSON = { msg: 'Table empty, no tracks found' }
-            const officesJSONString = JSON.stringify(officesJSON, null, 4)
-            res.writeHead(404, { 'Content-Type': 'application/json' })
-            // send out a string
-            res.end(officesJSONString)
-        }
+    DB.query(
+        'SELECT *, playlist.title as playlist_title  FROM playlist , track where playlist.id = track.playlist_id ;',
+        function (tracks) {
+            if (tracks.rowCount > 0) {
+                const officesJSON = { msg: 'OK', tracks: tracks.rows }
+                const officesJSONString = JSON.stringify(officesJSON, null, 4)
+                // set content type
+                res.writeHead(200, { 'Content-Type': 'application/json' })
+                // send out a string
+                res.end(officesJSONString)
+            } else {
+                // set content type
+                const officesJSON = { msg: 'Table empty, no tracks found' }
+                const officesJSONString = JSON.stringify(officesJSON, null, 4)
+                res.writeHead(404, { 'Content-Type': 'application/json' })
+                // send out a string
+                res.end(officesJSONString)
+            }
 
-        DB.disconnect()
-    })
+            DB.disconnect()
+        }
+    )
 })
 
 // DELETE
@@ -61,26 +64,31 @@ app.delete('/tracks/:id', function (request, response) {
 app.post('/tracks', function (request, response) {
     // get the form inputs from the body of the HTTP request
     console.log(request.body)
-    const id = request.body.id
-    const playlistId = request.body.playlist_id
+    const playlist = request.body.playlist
     const title = request.body.title
     const uri = request.body.uri
     const masterId = request.body.master_id
 
     const DB = require('./src/dao')
     DB.connect()
-
     DB.queryParams(
-        'INSERT INTO track VALUES ($1,$2,$3,$4,$5)',
-        [id, playlistId, title, uri, masterId],
-        function (tracks) {
-            const officesJSON = { msg: 'OK track added' }
-            const officesJSONString = JSON.stringify(officesJSON, null, 4)
-            // set content type
-            response.writeHead(200, { 'Content-Type': 'application/json' })
-            // send out a string
-            response.end(officesJSONString)
-            DB.disconnect()
+        'select * from playlist where title=$1',
+        [playlist],
+        function (playlist) {
+            let playlistJSON = {}
+            if (playlist.rowCount > 0) {
+                playlistJSON = playlist.rows[0]
+            }
+            DB.queryParams(
+                'INSERT INTO track(playlist_id, title, uri, master_id) VALUES ($1,$2,$3,$4)',
+                [playlistJSON.id || 1, title, uri, masterId],
+                function (tracks) {
+                    const playlitJSON = { msg: 'OK track added' }
+                    // send out a string
+                    response.send(playlitJSON)
+                    DB.disconnect()
+                }
+            )
         }
     )
 })
